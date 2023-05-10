@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,9 +31,10 @@ public class MemberController {
                 .map(u -> new MemberDto(u.getId(),u.getLoginId(),u.getPassword(), u.getName(), u.getNickName(), u.getNurseryName(), u.getPhoneNumber(), u.getAuth(), u.getGender()))
                 .collect(Collectors.toList()));
     }
-    @PostMapping("/api/users")
+    @PostMapping("/api/users/register")
     public CreateMemberResponse addMembers(@RequestBody @Validated Member newMember) {
-        Member member = new Member(newMember.getLoginId(), newMember.getPassword(), newMember.getName(), newMember.getNickName(), newMember.getNurseryName(), newMember.getPhoneNumber(), Authorization.NORMAL, newMember.getGender());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        Member member = new Member(newMember.getLoginId(), passwordEncoder.encode(newMember.getPassword()), newMember.getName(), newMember.getNickName(), newMember.getNurseryName(), newMember.getPhoneNumber(), Authorization.NORMAL, newMember.getGender());
         Long memberId = memberService.addMember(member);
         return new CreateMemberResponse(memberId);
     }
