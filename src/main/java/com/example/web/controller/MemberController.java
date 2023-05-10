@@ -5,10 +5,12 @@ import com.example.domain.Authorization;
 import com.example.domain.Gender;
 import com.example.domain.Member;
 import com.example.service.MemberService;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,12 +62,24 @@ public class MemberController {
     @Data
     @AllArgsConstructor
     static class CreateMember {
+        @NotBlank
+        @Length(max = 20)
         private String loginId;
+        @NotBlank
+        @Length(min = 10, max = 20)
         private String password;
+        @NotBlank
+        @Length(max = 20)
         private String name;
+        @NotBlank
+        @Length(max = 20)
         private String nickName;
+        @NotBlank
         private String nurseryName;
+        @NotBlank
+        @Length(max = 12)
         private String phoneNumber;
+        @NotBlank
         private Gender gender;
     }
     @Data
