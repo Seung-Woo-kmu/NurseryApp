@@ -1,9 +1,9 @@
 package com.example.web.controller;
 
 
-import com.example.domain.Authorization;
-import com.example.domain.Gender;
-import com.example.domain.Member;
+import com.example.domain.member.Authorization;
+import com.example.domain.member.Gender;
+import com.example.domain.member.Member;
 import com.example.service.MemberService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
