@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.domain.member.Member;
+import com.example.domain.Member;
 import com.example.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

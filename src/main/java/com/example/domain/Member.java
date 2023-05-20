@@ -1,6 +1,5 @@
-package com.example.domain.member;
+package com.example.domain;
 
-import com.example.domain.ExistTime;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

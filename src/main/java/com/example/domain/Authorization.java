@@ -1,4 +1,4 @@
-package com.example.domain.member;
+package com.example.domain;
 
 public enum Authorization {
     ADMIN, NORMAL

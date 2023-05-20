@@ -1,8 +1,8 @@
 package com.example;
 
-import com.example.domain.member.Authorization;
-import com.example.domain.member.Gender;
-import com.example.domain.member.Member;
+import com.example.domain.Authorization;
+import com.example.domain.Gender;
+import com.example.domain.Member;
 import com.example.domain.nursery.CityDistrict;
 import com.example.domain.nursery.Nursery;
 import com.example.dto.data.PublicNurseryData;
@@ -11,18 +11,14 @@ import com.example.service.NurseryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
