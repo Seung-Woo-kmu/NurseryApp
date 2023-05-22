@@ -1,6 +1,6 @@
 package com.example;
 
-import com.example.domain.Authorization;
+import com.example.domain.Authority;
 import com.example.domain.Gender;
 import com.example.domain.Member;
 import com.example.domain.nursery.CityDistrict;
@@ -9,7 +9,6 @@ import com.example.dto.data.PublicNurseryData;
 import com.example.service.MemberService;
 import com.example.service.NurseryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -17,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 
@@ -30,9 +30,9 @@ public class InitData {
     @PostConstruct
     public void members() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        Member memberA = new Member("asd12", encoder.encode("qwer1234"), "유승우", "천재", "하니어린이집", "010-1111-1111", Authorization.NORMAL, Gender.MAN);
-        Member memberB = new Member("qwe123", encoder.encode("qwer1234"), "유태근", "바보", "하니어린이집", "010-2222-1111", Authorization.NORMAL, Gender.MAN);
-        Member memberC = new Member("qwe123s", encoder.encode("qwer1234s"), "이지원", "개천재", "하니어린이집", "010-2222-1234", Authorization.NORMAL, Gender.MAN);
+        Member memberA = new Member("asd12", encoder.encode("qwer1234"), "유승우", "천재", "하니어린이집", "010-1111-1111", Authority.NORMAL, Gender.MAN);
+        Member memberB = new Member("qwe123", encoder.encode("qwer1234"), "유태근", "바보", "하니어린이집", "010-2222-1111", Authority.NORMAL, Gender.MAN);
+        Member memberC = new Member("qwe123s", encoder.encode("qwer1234s"), "이지원", "개천재", "하니어린이집", "010-2222-1234", Authority.NORMAL, Gender.MAN);
         memberService.addMember(memberA);
         memberService.addMember(memberB);
         memberService.addMember(memberC);

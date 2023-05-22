@@ -1,9 +1,10 @@
 package com.example.domain;
 
-import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -18,7 +19,7 @@ public class Member extends ExistTime {
 
     private String password;
 
-    public Member(String loginId, String password, String name, String nickName, String nurseryName, String phoneNumber, Authorization auth, Gender gender) {
+    public Member(String loginId, String password, String name, String nickName, String nurseryName, String phoneNumber, Authority auth, Gender gender) {
         this.loginId = loginId;
         this.password = password;
         this.name = name;
@@ -41,16 +42,14 @@ public class Member extends ExistTime {
 
     private String name;
 
-    @Column(unique = true)
     private String nickName;
 
     private String nurseryName;
 
-    @Column(unique = true)
     private String phoneNumber;
 
     @Enumerated(value = EnumType.STRING)
-    private Authorization auth;
+    private Authority auth;
 
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
