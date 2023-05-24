@@ -5,6 +5,7 @@ import com.example.domain.Member;
 import com.example.domain.UserDetailsImpl;
 import com.example.dto.LoginMember;
 import com.example.dto.LoginMemberResponse;
+import com.example.dto.UpdateMember;
 import com.example.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,6 +39,7 @@ public class MemberService implements UserDetailsService {
     public Optional<Member> findByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId);
     }
+    public Optional<Member> findById(Long id) {return memberRepository.findById(id);}
     @Transactional
     public Long addMember(Member user) {
         memberRepository.save(user);
@@ -58,4 +60,10 @@ public class MemberService implements UserDetailsService {
         Member member = memberRepository.findByLoginId(principal.getLoginId()).get();
         return new LoginMemberResponse(member.getId());
     }
+    @Transactional
+    public void update(UpdateMember request) {
+        Member member = memberRepository.findById(request.getId()).get();
+        member.updateMember(request.getLoginId(), request.getPassword(), request.getName(), request.getNickName(), request.getNurseryName(), request.getPhoneNumber(), request.getGender());
+    }
+
 }

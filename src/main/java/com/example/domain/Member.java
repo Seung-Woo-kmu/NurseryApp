@@ -39,6 +39,15 @@ public class Member extends ExistTime {
         this.phoneNumber = phoneNumber;
         this.gender = gender;
     }
+    public void updateMember(String loginId, String password, String name, String nickName, String nurseryName, String phoneNumber, Gender gender) {
+        this.loginId = loginId;
+        this.password = password;
+        this.name = name;
+        this.nickName = nickName;
+        this.nurseryName = nurseryName;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+    }
 
     private String name;
 

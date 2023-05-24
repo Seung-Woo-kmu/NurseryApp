@@ -2,12 +2,14 @@ package com.example.api.controller;
 
 
 import com.example.api.validator.MemberValidator;
+import com.example.api.validator.UpdateValidator;
 import com.example.domain.Authority;
 import com.example.domain.Gender;
 import com.example.domain.Member;
 import com.example.dto.CreateMember;
 import com.example.dto.LoginMember;
 import com.example.dto.LoginMemberResponse;
+import com.example.dto.UpdateMember;
 import com.example.repository.MemberRepository;
 import com.example.service.MemberService;
 import lombok.AllArgsConstructor;
@@ -20,10 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -77,6 +76,30 @@ public class MemberController {
         if (session != null) {
             session.invalidate();
         }
+    }
+    @PutMapping("/api/users/{id}")
+    public ResponseEntity<?> updateMember(@PathVariable("id") Long id, @RequestBody @Validated UpdateMember request, BindingResult bindingResult) {
+        request.setId(id);
+        UpdateValidator validator = new UpdateValidator(memberRepository);
+        validator.validate(request, bindingResult);
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getAllErrors()
+                    .forEach((error) -> {
+                        errors.put(((FieldError) error).getField(), error.getDefaultMessage());
+                    } );
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }
+        memberService.update(request);
+        Member member = memberService.findById(id).get();
+        UpdateMemberResponse response = new UpdateMemberResponse(member.getId());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class UpdateMemberResponse {
+        private Long id;
     }
     @Data
     @AllArgsConstructor
