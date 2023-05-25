@@ -13,22 +13,22 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class UpdateMember {
     private Long id;
-    @NotBlank
-    @Length(max = 20)
+    @NotBlank(message = "공백일 수 없습니다.")
+    @Length(max = 20, message = "최대 길이는 12입니다.")
     private String loginId;
-    @NotBlank
-    @Length(min = 10, max = 20)
+    @NotBlank(message = "공백일 수 없습니다.")
+    @Length(min = 10, max = 20, message = "비밀번호의 길이는 10 ~ 20입니다.")
     private String password;
-    @NotBlank
-    @Length(max = 20)
+    @NotBlank(message = "공백일 수 없습니다.")
+    @Length(max = 20, message = "비밀번호의 최대 길이는 20입니다.")
     private String name;
-    @NotBlank
-    @Length(max = 20)
+    @NotBlank(message = "공백일 수 없습니다.")
+    @Length(max = 20, message = "비밀번호의 최대 길이는 20입니다.")
     private String nickName;
-    @NotBlank
+    @NotBlank(message = "공백일 수 없습니다.")
     private String nurseryName;
-    @NotBlank
-    @Length(max = 12)
+    @NotBlank(message = "공백일 수 없습니다.")
+    @Length(max = 12, message = "최대 길이는 12입니다.")
     private String phoneNumber;
     private Gender gender;
 }

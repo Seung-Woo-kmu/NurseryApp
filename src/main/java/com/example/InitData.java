@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Component
 @RequiredArgsConstructor
@@ -60,11 +61,11 @@ public class InitData {
         try {
             // JSON 파일 로드
             Resource resource = new ClassPathResource("data/nurseryList.json");
-            File file = resource.getFile();
+            InputStream is = resource.getInputStream();
 
             // ObjectMapper를 사용하여 JSON을 객체로 변환
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(file, PublicNurseryData.class);
+            return objectMapper.readValue(is, PublicNurseryData.class);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("json 파일 읽어서 어린이집 데이터 생성 중에 오류 발생");
