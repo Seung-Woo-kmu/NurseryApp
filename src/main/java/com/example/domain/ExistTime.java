@@ -18,4 +18,12 @@ public abstract class ExistTime {
 
     @LastModifiedDate
     private LocalDateTime modifiedTime;
+
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public LocalDateTime getModifiedTime() {
+        return modifiedTime;
+    }
 }
