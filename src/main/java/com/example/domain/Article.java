@@ -5,8 +5,10 @@ import com.example.enums.BoardType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,10 +22,12 @@ public class Article extends ExistTime {
     private BoardType boardType;
 
     @Column
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Column
-    private String userName;
+    private List<Long> likedUserIds;
 
     @Column
     private String userProfileImage; //url
@@ -35,12 +39,9 @@ public class Article extends ExistTime {
     private String content;
 
     @Column
-    private String likesCount;
+    private List<Integer> likesCount;
 
     @Column
-    private Comment comments;
-
-    @Column
-    private int countLiked;
-
+    @OneToMany(mappedBy = "article" ,cascade = CascadeType.ALL)
+    private List<Comment> comments;
 }

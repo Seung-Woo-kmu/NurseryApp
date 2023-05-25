@@ -1,12 +1,13 @@
 package com.example.dto.article;
 
 import com.example.domain.Article;
+import com.example.enums.BoardType;
 import lombok.Data;
 
 @Data
 public class ArticleDto {
     private Long id;
-    private String boardType;
+    private BoardType boardType;
     private Long userId;
     private String userName;
     private String userProfileImage; //url
@@ -28,8 +29,8 @@ public class ArticleDto {
         this.content = article.getContent();
         this.createdAt = article.getCreatedTime().toString();
         this.likesCount = article.getLikesCount();
-        this.comments = article.co;
-        this.liked = liked;
+        this.comments = article.getComments();
+        this.liked = article.get;
         this.isOwner = isOwner;
     }
 }

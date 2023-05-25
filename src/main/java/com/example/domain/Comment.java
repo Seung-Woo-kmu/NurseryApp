@@ -16,10 +16,12 @@ public class Comment extends ExistTime {
     private Long id;
 
     @Column
-    private Long userId;
+    private Article article;
 
     @Column
-    private String userName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Column
     private String userProfileImage; //url
