@@ -1,6 +1,7 @@
 package com.example.service;
 
 
+import com.example.api.JwtUtils;
 import com.example.domain.Member;
 import com.example.domain.UserDetailsImpl;
 import com.example.dto.LoginMember;
@@ -26,8 +27,8 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
-
     private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
     public List<Member> findAll(){
         return memberRepository.findAll();
@@ -58,7 +59,8 @@ public class MemberService implements UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(auth);
         UserDetailsImpl principal = (UserDetailsImpl) auth.getPrincipal();
         Member member = memberRepository.findByLoginId(principal.getLoginId()).get();
-        return new LoginMemberResponse(member.getId());
+        String token = jwtUtils.generateToken(member.getId()); // 토큰 발급
+        return new LoginMemberResponse(member.getId(), token);
     }
     @Transactional
     public void update(UpdateMember request) {

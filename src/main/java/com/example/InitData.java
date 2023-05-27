@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.api.JwtUtils;
 import com.example.domain.Authority;
 import com.example.domain.Gender;
 import com.example.domain.Member;
@@ -15,9 +16,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -27,6 +26,7 @@ public class InitData {
 
     private final MemberService memberService;
     private final NurseryService nurseryService;
+    private final JwtUtils jwtUtils;
 
     @PostConstruct
     public void members() {

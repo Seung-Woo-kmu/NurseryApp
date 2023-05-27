@@ -13,6 +13,7 @@ import javax.persistence.*;
 public class Nursery extends ExistTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "nursery_id")
     private Long id;
 
     @Column
