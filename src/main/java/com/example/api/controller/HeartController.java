@@ -29,15 +29,14 @@ public class HeartController {
     }
 
     @ApiOperation(value = "좋아요 삭제")
-    @DeleteMapping("/api/article/{articleId}/heart/{heartId}")
+    @DeleteMapping("/api/article/{articleId}/heart")
     public ResponseEntity<DeleteHeartResponseDto> deleteHeart(
             @PathVariable("articleId") Long articleId,
-            @PathVariable("heartId") Long heartId,
             @RequestHeader("Authorization") String token
     ) {
         return ResponseEntity
                 .ok()
-                .body(new DeleteHeartResponseDto(heartService.deleteHeart(articleId, heartId, token)));
+                .body(new DeleteHeartResponseDto(heartService.deleteHeart(articleId, token)));
     }
 
 }

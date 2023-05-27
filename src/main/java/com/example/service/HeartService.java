@@ -30,16 +30,12 @@ public class HeartService {
     }
 
     @Transactional
-    public Long deleteHeart(Long articleId, Long heartId, String token) {
+    public Long deleteHeart(Long articleId, String token) {
         Long memberId = jwtUtils.getMemberId(token);
-        Article article = articleRepository.findById(articleId).get();
-        if (!article.getHearts().stream().map(heart -> heart.getId()).toList().contains(heartId))
-            throw new IllegalArgumentException("게시판에 없는 좋아요입니다.");
-        if (!article.getMember().getId().equals(memberId))
-            throw new IllegalArgumentException("본인이 추가한 좋아요만 삭제할 수 있습니다.");
-        Heart heart = heartRepository.findById(heartId).get();
-        article.removeHeart(heart);
+        Heart heart = heartRepository.findByArticleIdAndMemberId(articleId, memberId).get();
+        heart.getArticle().getHearts().remove(heart);
+        heart.getMember().getHearts().remove(heart);
         heartRepository.delete(heart);
-        return heartId;
+        return heart.getId();
     }
 }
