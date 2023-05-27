@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,9 +26,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,6 +41,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Api(tags = {"유저 API"})
 public class MemberController {
+    @Value("${file.dir}")
+    private String filePath;
     private final MemberService memberService;
 
     private final MemberRepository memberRepository;
@@ -47,16 +53,20 @@ public class MemberController {
     public MemberList showUsers() {
         return new MemberList(memberService.findAll()
                 .stream()
-                .map(u -> new MemberDto(u.getName(), u.getNickName(), u.getNurseryName(), u.getPhoneNumber(), u.getGender()))
+                .map(u -> new MemberDto(u.getName(), u.getNickName(), u.getProfileImageUrl(), u.getNurseryName(), u.getPhoneNumber(), u.getGender()))
                 .collect(Collectors.toList()));
     }
 
     @ApiOperation(value = "회원가입")
     @PostMapping("/api/users/register")
-    public ResponseEntity<?> addMembers(@Validated @RequestBody CreateMember newMember, BindingResult bindingResult) {
+    public ResponseEntity<?> addMembers(@RequestPart("file") MultipartFile file, @Validated @RequestPart CreateMember newMember, BindingResult bindingResult) throws IOException {
+        if (file.isEmpty()) {
+            Map<String, String> error = new HashMap<>();
+            error.put("file", "파일을 선택해야 합니다.");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
         MemberValidator validator = new MemberValidator(memberRepository);
         validator.validate(newMember, bindingResult);
-        System.out.println(bindingResult.getAllErrors());
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
             bindingResult.getAllErrors()
@@ -65,8 +75,11 @@ public class MemberController {
                     } );
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
+        String fileName = filePath + file.getOriginalFilename();
+        File imageFile = new File(fileName);
+        file.transferTo(imageFile);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        Member member = new Member(newMember.getLoginId(), passwordEncoder.encode(newMember.getPassword()), newMember.getName(), newMember.getNickName(), newMember.getNurseryName(), newMember.getPhoneNumber(), Authority.NORMAL, newMember.getGender());
+        Member member = new Member(newMember.getLoginId(), passwordEncoder.encode(newMember.getPassword()), newMember.getName(), newMember.getNickName(), newMember.getNurseryName(), newMember.getPhoneNumber(), Authority.NORMAL, newMember.getGender(), file.getOriginalFilename());
         Long memberId = memberService.addMember(member);
         CreateMemberResponse response = new CreateMemberResponse(memberId);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -88,8 +101,8 @@ public class MemberController {
     }
 
     @ApiOperation(value = "회원 정보 수정")
-    @PutMapping("/api/users/{id}")
-    public ResponseEntity<?> updateMember(@PathVariable("id") Long id, @RequestBody @Validated UpdateMember request, BindingResult bindingResult) {
+    @PostMapping("/api/users/{id}")
+    public ResponseEntity<?> updateMember(@PathVariable("id") Long id, @RequestPart("file") MultipartFile file, @RequestPart @Validated UpdateMember request, BindingResult bindingResult) throws IOException {
         request.setId(id);
         UpdateValidator validator = new UpdateValidator(memberRepository);
         validator.validate(request, bindingResult);
@@ -101,10 +114,22 @@ public class MemberController {
                     } );
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        memberService.update(request);
-        Member member = memberService.findById(id).get();
-        UpdateMemberResponse response = new UpdateMemberResponse(member.getId());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        if (file.isEmpty()) {
+            memberService.update(request);
+            Member member = memberService.findById(id).get();
+            UpdateMemberResponse response = new UpdateMemberResponse(member.getId());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        else {
+            String fileName =filePath + file.getOriginalFilename();
+            File imageFile = new File(fileName);
+            file.transferTo(imageFile);
+            memberService.update(request);
+            memberService.updateImage(request, file.getOriginalFilename());
+            Member member = memberService.findById(id).get();
+            UpdateMemberResponse response = new UpdateMemberResponse(member.getId());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
 
     @Data
@@ -122,6 +147,7 @@ public class MemberController {
     static class MemberDto {
         private String name;
         private String nickName;
+        private String profileImageUrl;
         private String nurseryName;
         private String phoneNumber;
         private Gender gender;

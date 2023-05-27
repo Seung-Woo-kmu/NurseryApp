@@ -69,5 +69,11 @@ public class MemberService implements UserDetailsService {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         member.updateMember(request.getLoginId(), passwordEncoder.encode(request.getPassword()), request.getName(), request.getNickName(), request.getNurseryName(), request.getPhoneNumber(), request.getGender());
     }
-
+    @Transactional
+    public void updateImage(UpdateMember request, String filePath) {
+        Member member = memberRepository.findById(request.getId()).get();
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        member.updateMember(request.getLoginId(), passwordEncoder.encode(request.getPassword()), request.getName(), request.getNickName(), request.getNurseryName(), request.getPhoneNumber(), request.getGender());
+        member.setProfileImageUrl(filePath);
+    }
 }

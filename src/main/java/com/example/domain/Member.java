@@ -12,6 +12,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends ExistTime {
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    };
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -22,7 +25,7 @@ public class Member extends ExistTime {
 
     private String password;
 
-    public Member(String loginId, String password, String name, String nickName, String nurseryName, String phoneNumber, Authority auth, Gender gender) {
+    public Member(String loginId, String password, String name, String nickName, String nurseryName, String phoneNumber, Authority auth, Gender gender, String profileImageUrl) {
         this.loginId = loginId;
         this.password = password;
         this.name = name;
@@ -31,6 +34,7 @@ public class Member extends ExistTime {
         this.phoneNumber = phoneNumber;
         this.auth = auth;
         this.gender = gender;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public void updateMember(String loginId, String password, String name, String nickName, String nurseryName, String phoneNumber, Gender gender) {
