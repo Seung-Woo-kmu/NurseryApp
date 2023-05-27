@@ -47,7 +47,7 @@ public class MemberController {
     public MemberList showUsers() {
         return new MemberList(memberService.findAll()
                 .stream()
-                .map(u -> new MemberDto(u.getId(),u.getLoginId(),u.getPassword(), u.getName(), u.getNickName(), u.getNurseryName(), u.getPhoneNumber(), u.getAuth(), u.getGender()))
+                .map(u -> new MemberDto(u.getName(), u.getNickName(), u.getNurseryName(), u.getPhoneNumber(), u.getGender()))
                 .collect(Collectors.toList()));
     }
 
@@ -120,14 +120,10 @@ public class MemberController {
     @Data
     @AllArgsConstructor
     static class MemberDto {
-        private Long id;
-        private String loginId;
-        private String password;
         private String name;
         private String nickName;
         private String nurseryName;
         private String phoneNumber;
-        private Authority auth;
         private Gender gender;
     }
     @Data

@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,7 +66,8 @@ public class MemberService implements UserDetailsService {
     @Transactional
     public void update(UpdateMember request) {
         Member member = memberRepository.findById(request.getId()).get();
-        member.updateMember(request.getLoginId(), request.getPassword(), request.getName(), request.getNickName(), request.getNurseryName(), request.getPhoneNumber(), request.getGender());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        member.updateMember(request.getLoginId(), passwordEncoder.encode(request.getPassword()), request.getName(), request.getNickName(), request.getNurseryName(), request.getPhoneNumber(), request.getGender());
     }
 
 }

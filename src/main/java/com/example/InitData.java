@@ -31,9 +31,9 @@ public class InitData {
     @PostConstruct
     public void members() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        Member memberA = new Member("asd12", encoder.encode("qwer1234"), "유승우", "천재", "하니어린이집", "010-1111-1111", Authority.NORMAL, Gender.MAN);
-        Member memberB = new Member("qwe123", encoder.encode("qwer1234"), "유태근", "바보", "하니어린이집", "010-2222-1111", Authority.NORMAL, Gender.MAN);
-        Member memberC = new Member("qwe123s", encoder.encode("qwer1234s"), "이지원", "개천재", "하니어린이집", "010-2222-1234", Authority.NORMAL, Gender.MAN);
+        Member memberA = new Member("asd1qw2", encoder.encode("qwer1234sss"), "유승우", "천재", "하니어린이집", "010-1111-1111", Authority.NORMAL, Gender.MAN);
+        Member memberB = new Member("qwe123qq", encoder.encode("qwer1234sss"), "유태근", "바보", "하니어린이집", "010-2222-1111", Authority.NORMAL, Gender.MAN);
+        Member memberC = new Member("qwe123saa", encoder.encode("qwer1234sss"), "이지원", "개천재", "하니어린이집", "010-2222-1234", Authority.NORMAL, Gender.MAN);
         memberService.addMember(memberA);
         memberService.addMember(memberB);
         memberService.addMember(memberC);
