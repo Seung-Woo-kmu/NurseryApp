@@ -74,9 +74,4 @@ public class Article extends ExistTime {
         this.getMember().getComments().remove(comment);
     }
 
-    public void removeHeart(Heart heart) {
-        this.hearts.remove(heart);
-        this.getMember().getComments().remove(heart);
-    }
-
 }
