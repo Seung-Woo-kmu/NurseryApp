@@ -101,7 +101,7 @@ public class MemberController {
     }
 
     @ApiOperation(value = "회원 정보 수정")
-    @PostMapping("/api/users/{id}")
+    @PutMapping("/api/users/{id}")
     public ResponseEntity<?> updateMember(@PathVariable("id") Long id, @RequestPart("file") MultipartFile file, @RequestPart @Validated UpdateMember request, BindingResult bindingResult) throws IOException {
         request.setId(id);
         UpdateValidator validator = new UpdateValidator(memberRepository);
