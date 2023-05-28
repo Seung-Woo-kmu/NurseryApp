@@ -19,7 +19,11 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -32,6 +36,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -98,6 +106,18 @@ public class MemberController {
         if (session != null) {
             session.invalidate();
         }
+    }
+    @ApiOperation(value = "이미지 저장")
+    @ResponseBody
+    @GetMapping("/api/users/image/{id}")
+    public ResponseEntity<?> showImage(@PathVariable("id") Long id) throws IOException {
+        Member member = memberService.findById(id).get();
+        String profileImageUrl = member.getProfileImageUrl();
+        Path path = Paths.get(profileImageUrl);
+        byte[] imageBytes = Files.readAllBytes(path);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
     }
 
     @ApiOperation(value = "회원 정보 수정")
