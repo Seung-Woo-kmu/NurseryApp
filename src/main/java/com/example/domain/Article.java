@@ -1,12 +1,9 @@
 package com.example.domain;
 
-import com.example.domain.nursery.CityDistrict;
-import com.example.dto.article.ArticleDto;
 import com.example.enums.BoardType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -40,6 +37,9 @@ public class Article extends ExistTime {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<Comment>();
 
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private List<ArticleImage> images = new ArrayList<ArticleImage>();
+
     private void setBoardType(BoardType boardType) {
         this.boardType = boardType;
     }
@@ -57,6 +57,14 @@ public class Article extends ExistTime {
         this.title = title;
         this.content = content;
         this.member = member;
+    }
+
+    public void addImage(ArticleImage image) {
+        this.images.add(image);
+    }
+
+    public void removeImage(ArticleImage image) {
+        this.images.remove(image);
     }
 
     public void updateArticle(

@@ -1,6 +1,7 @@
 package com.example.dto.article;
 
 import com.example.domain.Article;
+import com.example.domain.ArticleImage;
 import com.example.domain.Heart;
 import com.example.domain.Member;
 import com.example.enums.BoardType;
@@ -18,6 +19,7 @@ public class ArticleDto {
     private String userProfileImage; //url
     private String title;
     private String content;
+    private List<String> attachedImageURLs;
     private String createdAt;
     private Integer likesCount;
     private List<CommentDto> comments;
@@ -39,5 +41,6 @@ public class ArticleDto {
         this.liked = article.getHearts().stream()
                 .map(Heart::getMember).toList().contains(memberId);
         this.isOwner = createMember.getId().equals(memberId);
+        this.attachedImageURLs = article.getImages().stream().map(ArticleImage::getImageUrl).toList();
     }
 }

@@ -8,8 +8,18 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -45,23 +55,25 @@ public class ArticleController {
     @ApiOperation(value = "게시글 작성")
     @PostMapping("/api/article")
     public ResponseEntity<CreateArticleResponseDto> createArticle(
-            @RequestBody CreateArticleRequestDto request,
-            @RequestHeader("Authorization") String token
-    ) {
+            @RequestHeader("Authorization") String token,
+            @RequestPart CreateArticleRequestDto request,
+            @RequestPart List<MultipartFile> files
+            ) throws IOException {
         return ResponseEntity
                 .ok()
-                .body(new CreateArticleResponseDto(articleService.createArticle(request, token)));
+                .body(new CreateArticleResponseDto(articleService.createArticle(request, token, files)));
     }
 
     @ApiOperation(value = "게시글 수정")
     @PutMapping("/api/article/{id}")
     public ResponseEntity<UpdateArticleResponseDto> updateArticle(
             @PathVariable("id") Long articleId,
-            @RequestBody CreateArticleRequestDto request
-    ) {
+            @RequestPart UpdateArticleRequestDto request,
+            @RequestPart List<MultipartFile> files
+    ) throws IOException {
         return ResponseEntity
                 .ok()
-                .body(new UpdateArticleResponseDto(articleService.updateArticle(articleId, request)));
+                .body(new UpdateArticleResponseDto(articleService.updateArticle(articleId, request, files)));
     }
 
     @ApiOperation(value = "게시글 삭제")
@@ -72,6 +84,17 @@ public class ArticleController {
         return ResponseEntity
                 .ok()
                 .body(new DeleteArticleResponseDto(articleService.deleteArticle(articleId)));
+    }
+
+    @ApiOperation(value = "이미지 조회")
+    @ResponseBody
+    @GetMapping("/api/image/{imageUrl}")
+    public ResponseEntity<?> showImage(@PathVariable("imageUrl") String profileImageUrl) throws IOException {
+        Path path = Paths.get(profileImageUrl);
+        byte[] imageBytes = Files.readAllBytes(path);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
     }
 
 }
